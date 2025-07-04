@@ -20,25 +20,33 @@ class Category extends BaseController
         return view('category/index', $data);
     }
 
-    public function create()
-    {
-        $data['title'] = 'Tambah Kategori';
-        return view('category/create', $data);
-    }
+public function create()
+{
+    $data['title'] = 'Tambah Kategori';
+    return view('category/create', $data); // Pastikan ini mengarah ke file yang benar
+}
 
     public function store()
-    {
-        $rules = ['category_name' => 'required|min_length[3]'];
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
-        $this->categoryModel->saveCategory([
-            'category_name' => $this->request->getPost('category_name')
-        ]);
-
-        return redirect()->to('/category')->with('success', 'Kategori berhasil ditambahkan!');
+{
+    $rules = ['name' => 'required|min_length[3]'];
+    if (!$this->validate($rules)) {
+        return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
     }
+
+    // --- Tambahkan ini untuk debugging ---
+    // echo "Validasi berhasil, mencoba menyimpan kategori...";
+    // die(); // Atau dd($this->request->getPost('name'));
+
+    $this->categoryModel->saveCategory([
+        'name' => $this->request->getPost('name')
+    ]);
+
+    // --- Tambahkan ini untuk debugging ---
+    // echo "Kategori berhasil disimpan, mencoba redirect...";
+    // die(); // Atau dd(session()->get('categories'));
+
+    return redirect()->to('/category')->with('success', 'Kategori berhasil ditambahkan!');
+}
 
     public function edit($id)
     {
@@ -48,18 +56,18 @@ class Category extends BaseController
     }
 
     public function update($id)
-    {
-        $rules = ['category_name' => 'required|min_length[3]'];
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
-        $this->categoryModel->updateCategory($id, [
-            'category_name' => $this->request->getPost('category_name')
-        ]);
-
-        return redirect()->to('/category')->with('success', 'Kategori berhasil diperbarui!');
+{
+    // Pastikan aturan validasi menggunakan 'name'
+    $rules = ['name' => 'required|min_length[3]']; 
+    if (!$this->validate($rules)) {
+        return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
     }
+
+    $this->categoryModel->updateCategory($id, [
+        'name' => $this->request->getPost('name') // Pastikan mengambil dari input 'name'
+    ]);
+    // ...
+}
 
     public function delete($id)
     {
