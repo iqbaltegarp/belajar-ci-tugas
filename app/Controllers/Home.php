@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Models\ProductModel;
 use CodeIgniter\Controller;
+use App\Models\TransactionModel;
+use App\Models\TransactionDetailModel;
 
 class Home extends Controller
 {
@@ -13,14 +15,16 @@ class Home extends Controller
 }
 
     protected $product;
+    protected $transaction;
+    protected $transaction_detail;
 
     public function __construct()
-    {
-        // Membuat objek dari model ProductModel dan menyimpannya ke property $product
-        helper('form');
-        helper('number');
-        $this->product = new ProductModel();
-    }
+{
+    helper(['form', 'number']);
+    $this->product = new ProductModel();
+    $this->transaction = new TransactionModel(); // ✅ Tambahkan ini
+    $this->transaction_detail = new TransactionDetailModel(); // ✅ Tambahkan ini (pastikan ejaannya benar!)
+}
 
     public function index()
     {
@@ -33,4 +37,28 @@ class Home extends Controller
         // Meneruskan data ke view v_home
         return view('v_home', $data);
     }
+    public function profile()
+{
+    $username = session()->get('username');
+    $data['username'] = $username;
+
+    $buy = $this->transaction->where('username', $username)->findAll();
+    $data['buy'] = $buy;
+
+    $product = [];
+
+    if (!empty($buy)) {
+        foreach ($buy as $item) {
+            $detail = $this->transaction_detail->select('transaction_detail.*, product.nama, product.harga, product.foto')->join('product', 'transaction_detail.product_id=product.id')->where('transaction_id', $item['id'])->findAll();
+
+            if (!empty($detail)) {
+                $product[$item['id']] = $detail;
+            }
+        }
+    }
+
+    $data['product'] = $product;
+
+    return view('v_profile', $data);
+}
 }
