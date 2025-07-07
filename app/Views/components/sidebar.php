@@ -32,6 +32,15 @@
     </a>
 </li>
 
+<?php if (session('role') === 'admin'): ?>
+<li class="nav-item">
+    <a class="nav-link" href="<?= base_url('diskon') ?>">
+        <i class="bi bi-tags"></i>
+        <span>Manajemen Diskon</span>
+    </a>
+</li>
+<?php endif; ?>
+
         <?php
         }
         ?>

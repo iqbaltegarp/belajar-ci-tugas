@@ -46,11 +46,17 @@ if (uri_string() != "") {
 
 <body>
 
-    <?= $this->include('components/header') ?>
+<?= $this->include('components/header') ?>
 
-    <?= $this->include('components/sidebar') ?>
+<?php if (session()->get('role') === 'guest' && session()->get('diskon_nominal')) : ?>
+    <div class="alert alert-success text-center m-3">
+        🎉 Diskon Hari Ini: <?= number_to_currency(session('diskon_nominal'), 'IDR') ?>
+    </div>
+<?php endif; ?>
 
-    <main id="main" class="main">
+<?= $this->include('components/sidebar') ?>
+
+<main id="main" class="main">
 
         <div class="pagetitle">
             <h1><?php echo $hlm ?></h1>
