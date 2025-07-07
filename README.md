@@ -1,40 +1,79 @@
-# Toko Online CodeIgniter 4
+# 🛍️ Toko Online - CodeIgniter 4
 
-Proyek ini adalah platform toko online yang dibangun menggunakan [CodeIgniter 4](https://codeigniter.com/). Sistem ini menyediakan beberapa fungsionalitas untuk toko online, termasuk manajemen produk, keranjang belanja, dan sistem transaksi.
+Proyek ini adalah platform toko online berbasis web menggunakan **CodeIgniter 4**. Sistem ini memungkinkan pembeli (guest) melakukan pembelian produk dan admin untuk mengelola produk, kategori, diskon harian, dan melihat transaksi.
 
-## Daftar Isi
+---
 
-- [Fitur](#fitur)
-- [Persyaratan Sistem](#persyaratan-sistem)
-- [Instalasi](#instalasi)
-- [Struktur Proyek](#struktur-proyek)
+## 📚 Daftar Isi
 
-## Fitur
+- [✨ Fitur](#-fitur)
+- [⚙️ Persyaratan Sistem](#️-persyaratan-sistem)
+- [🚀 Instalasi](#-instalasi)
+- [📁 Struktur Proyek](#-struktur-proyek)
+- [👤 Akun Demo](#-akun-demo)
 
-- Katalog Produk
-  - Tampilan produk dengan gambar
-  - Pencarian produk
-- Keranjang Belanja
-  - Tambah/hapus produk
-  - Update jumlah produk
-- Sistem Transaksi
-  - Proses checkout
-  - Riwayat transaksi
-- Panel Admin
-  - Manajemen produk (CRUD)
-  - Manajemen kategori
-  - Laporan transaksi
-  - Export data ke PDF
-- Sistem Autentikasi
-  - Login/Register pengguna
-  - Manajemen akun
-- UI Responsif dengan NiceAdmin template
+---
 
-## Persyaratan Sistem
+## ✨ Fitur
+
+### 🔐 Autentikasi
+
+- Login berdasarkan **role**: `admin` dan `guest`
+- Validasi username dan password
+- Redirect berdasarkan peran
+
+### 📦 Produk & Kategori
+
+- Admin dapat mengelola produk: tambah, edit, hapus, upload foto
+- Manajemen kategori produk
+
+### 🛒 Keranjang Belanja
+
+- Guest dapat:
+  - Menambahkan produk ke keranjang
+  - Menghapus atau mengedit jumlah
+  - Melihat subtotal dan total harga
+
+### 🎁 Diskon Harian (Admin Only)
+
+- Diskon harian disimpan di database
+- Saat **guest login**, diskon hari ini disimpan ke `session`
+- Saat checkout, diskon diterapkan per produk
+
+### 💳 Checkout & Transaksi
+
+- Form checkout: alamat, ongkir
+- Integrasi API RajaOngkir Komerce untuk lokasi dan biaya kirim
+- Data transaksi disimpan di tabel `transaction` dan `transaction_detail`
+
+### 📊 Web Service (API)
+
+- Endpoint API dengan autentikasi `API Key`
+- Mengembalikan data transaksi dan detail item
+- Bisa diakses melalui CURL atau frontend
+
+### 🧾 Laporan Admin
+
+- Admin dapat melihat semua transaksi
+- Menampilkan total, status, tanggal, dll
+
+### 🖥️ Halaman Tambahan
+
+- FAQ
+- Contact
+- Profile
+
+---
+
+## ⚙️ Persyaratan Sistem
 
 - PHP >= 8.2
 - Composer
-- Web server (XAMPP)
+- MySQL / MariaDB
+- XAMPP/Laragon
+- Web Browser
+
+---
 
 ## Instalasi
 
@@ -49,9 +88,14 @@ Proyek ini adalah platform toko online yang dibangun menggunakan [CodeIgniter 4]
    ```
 3. **Konfigurasi database**
 
-   - Start module Apache dan MySQL pada XAMPP
-   - Buat database **db_ci4** di phpmyadmin.
-   - copy file .env dari tutorial https://www.notion.so/april-ns/Codeigniter4-Migration-dan-Seeding-045ffe5f44904e5c88633b2deae724d2
+   database.default.hostname = localhost
+   database.default.database = tugas4pwl
+   database.default.username = root
+   database.default.password =
+   database.default.DBDriver = MySQLi
+
+API_KEY = random123678abcghi
+COST_KEY = your_rajaongkir_api_key
 
 4. **Jalankan migrasi database**
    ```bash
@@ -73,17 +117,41 @@ Proyek ini adalah platform toko online yang dibangun menggunakan [CodeIgniter 4]
 
 ## Struktur Proyek
 
-Proyek menggunakan struktur MVC CodeIgniter 4:
+belajar-ci/
+├── app/
+│ ├── Config/
+│ ├── Controllers/
+│ │ ├── AuthController.php
+│ │ ├── Home.php
+│ │ ├── TransaksiController.php
+│ │ ├── DiskonController.php
+│ │ └── ApiController.php
+│ ├── Filters/
+│ ├── Models/
+│ │ ├── ProductModel.php
+│ │ ├── UserModel.php
+│ │ ├── DiskonModel.php
+│ │ ├── TransactionModel.php
+│ │ └── TransactionDetailModel.php
+│ ├── Views/
+│ │ ├── layout.php
+│ │ ├── v_login.php
+│ │ ├── v_keranjang.php
+│ │ ├── v_checkout.php
+│ │ └── diskon/
+│ │ ├── index.php
+│ │ ├── create.php
+│ │ └── edit.php
+├── public/
+│ └── img/ (gambar produk)
+│ └── NiceAdmin/ (template UI)
+├── writable/
+├── .env
+├── composer.json
+└── spark
 
-- app/Controllers - Logika aplikasi dan penanganan request
-  - AuthController.php - Autentikasi pengguna
-  - ProdukController.php - Manajemen produk
-  - TransaksiController.php - Proses transaksi
-- app/Models - Model untuk interaksi database
-  - ProductModel.php - Model produk
-  - UserModel.php - Model pengguna
-- app/Views - Template dan komponen UI
-  - v_produk.php - Tampilan produk
-  - v_keranjang.php - Halaman keranjang
-- public/img - Gambar produk dan aset
-- public/NiceAdmin - Template admin
+👥 Akun Demo
+| Role | Username | Password |
+| ----- | --------- | --------- |
+| Admin | `kusada` | `1234567` |
+| Guest | `gandi83` | `1234567` |
